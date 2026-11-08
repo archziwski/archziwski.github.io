@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme {
+  /* arch paleti — monokrom: siyah zemin, tebeşir beyazı metin,
+     saf beyaz vurgu. Tipografi: Fraunces + IBM Plex Mono. */
+  --color-void: #060607;
+  --color-panel: #111113;
+  --color-chalk: #efeff1;
+  --color-hi: #ffffff;
+
+  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --font-body: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-optical-sizing: auto;
+}
+
+body {
+  background: var(--color-void);
+  color: var(--color-chalk);
+  font-family: var(--font-body);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-hi);
+  color: #060607;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #060607;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f1f23;
+  border-radius: 8px;
+  border: 2px solid #060607;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #34343a;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 1px solid var(--color-hi);
+  outline-offset: 3px;
+}
+
+/* — uiverse.io tarzı dönen konik kenar —
+   1px'lik halka maskesiyle beyaz→gri yay, hover'da döner.
+   .conic-host, odaklanan/hoverlanan kabın kendisidir. */
+@property --arch-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes arch-spin {
+  to {
+    --arch-angle: 360deg;
+  }
+}
+
+.conic-ring::after,
+.conic-ring-on::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--arch-angle),
+    transparent 0deg 220deg,
+    rgba(255, 255, 255, 0.85) 262deg,
+    rgba(150, 150, 160, 0.6) 292deg,
+    transparent 340deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.conic-host:hover .conic-ring::after,
+.conic-host:focus-visible .conic-ring::after {
+  opacity: 1;
+  animation: arch-spin 3.5s linear infinite;
+}
+
+/* sürekli açık, kısık yoğunlukta canlılık halkası */
+.conic-ring-on::after {
+  opacity: 0.5;
+  animation: arch-spin 7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .conic-host:hover .conic-ring::after,
+  .conic-host:focus-visible .conic-ring::after,
+  .conic-ring-on::after {
+    animation: none;
+  }
+}
